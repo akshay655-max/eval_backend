@@ -9,6 +9,9 @@ const app=express();
 
 const {connection,Usermodel}=require("./db")
 app.use(express.json());
+app.get("/",(req,res)=>{
+   res.send("HomePage")
+})
 
 
 
