@@ -1,4 +1,6 @@
 const express=require("express");
+const jwt = require("jsonwebtoken")
+const bcrypt = require('bcrypt');
 require("dotenv").config()
 
 
@@ -12,6 +14,31 @@ app.use(express.json());
 app.get("/",(req,res)=>{
    res.send("HomePage")
 })
+
+app.post("/signup", async (req,res) =>{
+    console.log(req.body)
+    const {email,password} = req.body;
+    const isUser = await userModel.findOne({email})
+    if(isUser?.email){
+        res.send("login again user exist")
+    }
+    else{
+        try{
+            bcrypt.hash(password, 4, async function(err,hash) {
+                const user = new userModel({email,password:hash})
+                await user.save()
+                res.send("sign up successfull")
+            });
+           
+        }
+       catch(err){
+            console.log(err)
+            res.send("error in login")
+        }
+    }
+    
+})
+
 
 
 
@@ -79,3 +106,6 @@ app.listen(8000,async()=>{
    
     console.log("listen to port 9000");
 })
+
+
+
